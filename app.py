@@ -1,22 +1,13 @@
-import subprocess
-import sys
-import os
-
-# 1. AUTOMATISCHE INSTALLATION: Installiert das Excel-Paket im Hintergrund, falls es fehlt
-try:
-    import openpyxl
-except ImportError:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "openpyxl"])
-
 import streamlit as st
 import pandas as pd
+import os
 import io
 
 # Webseiten-Konfiguration
 st.set_page_config(page_title="Gnetz Mobilfunk Tracker", layout="wide")
 st.title("🌐 Gnetz Team-Projekt-Tracker")
 
-# 2. PFAD-ERKENNUNG (Für dich lokal am PC)
+# 1. PFAD-ERKENNUNG (Für dich lokal am PC)
 USER_PROFILE = os.environ.get("USERPROFILE", "")
 EXCEL_PATH = os.path.join(USER_PROFILE, "OneDrive", "Gnetz neu", "1PROJEKTLISTE_GNETZneu.xlsx")
 
@@ -32,7 +23,7 @@ if not os.path.exists(EXCEL_PATH) and USER_PROFILE:
     except Exception:
         pass
 
-# 3. ENTSCHEIDUNG: Läuft die App bei dir lokal oder in der Cloud?
+# 2. ENTSCHEIDUNG: Läuft die App bei dir lokal oder in der Cloud?
 df = None
 is_cloud = not os.path.exists(EXCEL_PATH)
 
@@ -51,7 +42,7 @@ else:
     except Exception:
         st.error("🔒 Bitte schließe die originale Excel-Datei auf deinem PC!")
 
-# 4. TABELLE UND AUTOMATISIERUNG
+# 3. TABELLE UND AUTOMATISIERUNG
 if df is not None:
     if "Abgehakt" not in df.columns:
         df["Abgehakt"] = False
@@ -65,7 +56,7 @@ if df is not None:
         use_container_width=True
     )
 
-    # 5. SPEICHERN / EXPORTIEREN
+    # 4. SPEICHERN / EXPORTIEREN
     if not is_cloud:
         # Lokaler PC-Modus speichert direkt zurück in dein OneDrive
         if st.button("💾 Änderungen direkt in Excel speichern", type="primary"):
